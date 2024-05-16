@@ -4,6 +4,7 @@ import graphviz
 import matplotlib.pyplot as plt
 import numpy as np
 import gymnasium.wrappers
+from compute_action_util import compute_action_bipedal_walker, compute_action_lander
 
 
 def plot_stats(statistics, ylog=False, view=False, filename='avg_fitness.svg'):
@@ -160,7 +161,7 @@ if __name__ == '__main__':
         winner = pickle.load(f)
     # load the config file
     local_dir = os.path.dirname(__file__)
-    config_path = os.path.join(local_dir, 'config-walker')
+    config_path = os.path.join(local_dir, 'config/config-walker')
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)

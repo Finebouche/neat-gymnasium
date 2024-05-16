@@ -14,6 +14,7 @@ import numpy as np
 import neat
 import visualize
 from neat.nn import FeedForwardNetwork
+from compute_action_util import compute_action_bipedal_walker, compute_action_lander
 
 NUM_CORES = multiprocessing.cpu_count()
 
@@ -37,17 +38,6 @@ class VectorizedFeedForwardNetwork(FeedForwardNetwork):
             self.values[node] = act_func(bias + response * s)
 
         return self.values[self.output_nodes]
-
-
-def compute_action_lander(net, observation):
-    activation = net.activate(observation)
-    # Gym expects discrete actions (0, 1, 2, 3), so we need to convert the output
-    return np.argmax(activation)
-
-
-def compute_action_bipedal_walker(net, observation):
-    activation = net.activate(observation)
-    return activation
 
 
 class PooledErrorCompute(object):
@@ -132,7 +122,7 @@ def run(config_file="config", env_name="LunarLander-v2", num_generations=None, c
     stats = neat.StatisticsReporter()
     pop.add_reporter(stats)
     pop.add_reporter(neat.StdOutReporter(True))
-    # Checkpoint every 25 generations or 900 seconds.
+    # Checkpoint every 100 generations or 900 seconds.
     pop.add_reporter(neat.Checkpointer(1000))  # neat.Checkpointer(25, 900)
 
     # Run until the winner from a generation is able to solve the environment
@@ -153,4 +143,4 @@ def run(config_file="config", env_name="LunarLander-v2", num_generations=None, c
 if __name__ == '__main__':
     # https://github.com/ShangtongZhang/DistributedES/blob/master/neat-config/BipedalWalker-v2.txt
     # LunarLander-v2 CarRacing-v1, BipedalWalker-v3
-    run(config_file="config-walker", env_name="BipedalWalker-v3", num_generations=2000)
+    run(config_file="config/config-walker", env_name="BipedalWalker-v3", num_generations=10, checkpoint="neat-checkpoint-339")
