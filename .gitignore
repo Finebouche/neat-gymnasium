@@ -1,0 +1,5 @@
+/neat-checkpoint-*
+*.svg
+.idea
+*.pickle
+*.gv
