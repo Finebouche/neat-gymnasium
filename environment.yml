@@ -1,0 +1,22 @@
+name: neat_env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - cairo
+  - cython
+  - graphviz
+  - jupyter
+  - gym
+  - "gymnasium[box2d]"
+  - matplotlib
+  - pyglet
+  - python-graphviz
+  - swig
+  - pip
+  - pip:
+      - gizeh
+      - moviepy
+      - pygame
+      - pyspice
+      - neat-python
