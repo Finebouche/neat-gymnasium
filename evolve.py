@@ -14,7 +14,7 @@ import numpy as np
 import neat
 import visualize
 from neat.nn import FeedForwardNetwork
-from compute_action_util import compute_action_bipedal_walker, compute_action_lander
+from compute_action_util import compute_action_discrete, compute_action_box
 
 NUM_CORES = multiprocessing.cpu_count()
 
@@ -49,13 +49,15 @@ class PooledErrorCompute(object):
 
     def compute_reward(self, net):
         try:
-            observation_init_vals, observation_init_info = self.env.reset()
-            terminated = False
-            t = 0
 
             total_reward = 0.0
             for n in range(10):
-                while not terminated and t < 1000:
+                observation_init_vals, observation_init_info = self.env.reset()
+
+                terminated = False
+                done = False
+                t = 0
+                while t < 1000:
                     action = self.compute_action(net, observation_init_vals)
                     observation, reward, terminated, done, info = self.env.step(action)
 
@@ -63,6 +65,7 @@ class PooledErrorCompute(object):
                     t += 1
                     if terminated or done:
                         break
+
 
             return total_reward / 10
         except Exception as e:
@@ -123,24 +126,24 @@ def run(config_file="config", env_name="LunarLander-v2", num_generations=None, c
     pop.add_reporter(stats)
     pop.add_reporter(neat.StdOutReporter(True))
     # Checkpoint every 100 generations or 900 seconds.
-    pop.add_reporter(neat.Checkpointer(1000))  # neat.Checkpointer(25, 900)
+    pop.add_reporter(neat.Checkpointer(generation_interval=1000))  # neat.Checkpointer(25, 900)
+
+    ec = PooledErrorCompute(NUM_CORES, env_name, compute_action_discrete)
 
     # Run until the winner from a generation is able to solve the environment
     # or the user interrupts the process.
-    ec = PooledErrorCompute(NUM_CORES, env_name, compute_action_bipedal_walker)
-
     gen_best = pop.run(ec.eval_genomes, num_generations)
-    visualize.draw_net(config, gen_best, True, filename="win-net.gv")
-    visualize.plot_stats(stats, ylog=False, view=True)
-    visualize.plot_species(stats, view=True)
+
+    visualize.draw_net(config, gen_best, True, filename="visualisations/win-net.gv")
+    visualize.plot_stats(stats, ylog=False, view=True, filename='visualisations/avg_fitness.svg')
+    visualize.plot_species(stats, view=True, filename='visualisations/speciation.svg')
 
     name = 'winner-net'
     with open(name + '.pickle', 'wb') as f:
         pickle.dump(gen_best, f)
 
 
-
 if __name__ == '__main__':
     # https://github.com/ShangtongZhang/DistributedES/blob/master/neat-config/BipedalWalker-v2.txt
-    # LunarLander-v2 CarRacing-v1, BipedalWalker-v3
-    run(config_file="config/config-walker", env_name="BipedalWalker-v3", num_generations=10, checkpoint="neat-checkpoint-339")
+    # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
+    run(config_file="config/config-cartpol", env_name='CartPole-v1', num_generations=100000)

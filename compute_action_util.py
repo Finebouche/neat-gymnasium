@@ -1,12 +1,13 @@
 import numpy as np
 
 
-def compute_action_lander(net, observation):
+def compute_action_discrete(net, observation):
     activation = net.activate(observation)
     # Gym expects discrete actions (0, 1, 2, 3), so we need to convert the output
-    return np.argmax(activation)
+    action = np.argmax(activation)
+    return action
 
 
-def compute_action_bipedal_walker(net, observation):
-    activation = net.activate(observation)
-    return activation
+def compute_action_box(net, observation):
+    action = net.activate(observation)
+    return action

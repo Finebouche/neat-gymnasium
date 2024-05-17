@@ -7,7 +7,6 @@ dependencies:
   - cython
   - graphviz
   - jupyter
-  - gym
   - "gymnasium[box2d]"
   - matplotlib
   - pyglet

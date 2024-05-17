@@ -4,7 +4,7 @@ import graphviz
 import matplotlib.pyplot as plt
 import numpy as np
 import gymnasium.wrappers
-from compute_action_util import compute_action_bipedal_walker, compute_action_lander
+from compute_action_util import compute_action_discrete, compute_action_box
 
 
 def plot_stats(statistics, ylog=False, view=False, filename='avg_fitness.svg'):
@@ -136,16 +136,12 @@ def draw_net(config, genome, view=False, filename=None, node_names=None, show_di
 # Function to evaluate the performance of the neural network
 def evaluate_network(config, genome, env, render=False):
     network = neat.nn.FeedForwardNetwork.create(genome, config)
-
     observation, info = env.reset()
-
     terminated = False
-    t = 0
-
     while not terminated:
         if render:
             env.render()
-        action = compute_action_bipedal_walker(network, observation)
+        action = compute_action_discrete(network, observation)
         observation, reward, terminated, done, info = env.step(action)
 
     env.close()
@@ -156,16 +152,17 @@ if __name__ == '__main__':
     import pickle
     import neat
     import os
+
     # charge pickle file with the best genome
     with open('winner-net.pickle', 'rb') as f:
         winner = pickle.load(f)
     # load the config file
     local_dir = os.path.dirname(__file__)
-    config_path = os.path.join(local_dir, 'config/config-walker')
+    config_path = os.path.join(local_dir, 'config/config-cartpol')
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
     # draw the network
-    # LunarLander-v2 CarRacing-v1, BipedalWalker-v3
-    env = gymnasium.make('BipedalWalker-v3', render_mode="human")
+    # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
+    env = gymnasium.make('CartPole-v1', render_mode="human")
     evaluate_network(config, winner, env, render=True)
