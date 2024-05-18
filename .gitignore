@@ -3,3 +3,5 @@
 .idea
 *.pickle
 *.gv
+*.ipynb_checkpoints/
+__pycache__/

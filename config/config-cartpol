@@ -1,4 +1,4 @@
-# neat-python configuration for the LunarLander-v2 environment on OpenAI Gym
+# neat-python configuration for the Cartpol environment on Gymnasium
 
 [NEAT]
 pop_size              = 150

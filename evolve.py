@@ -11,11 +11,11 @@ NUM_CORES = cpu_count()
 
 
 class ParallelRewardEvaluator(object):
-    def __init__(self, num_workers, env_name):
+    def __init__(self, num_workers, env_name, env_args):
         self.num_workers = num_workers
         self.generation = 0
         self.pool = Pool(processes=num_workers)
-        self.env = gymnasium.make(env_name)
+        self.env = gymnasium.make(env_name, **env_args)
         if isinstance(self.env.action_space, gymnasium.spaces.Discrete):
             self.compute_action = compute_action_discrete
         else:
@@ -43,7 +43,7 @@ class ParallelRewardEvaluator(object):
         self.pool.terminate()
 
 
-def run(config_file="config-default", env_name="LunarLander-v2", num_generations=None, checkpoint=None):
+def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=None):
     # Load the config file, which is assumed to live in
     # the same directory as this script.
     local_dir = os.path.dirname(__file__)
@@ -60,7 +60,7 @@ def run(config_file="config-default", env_name="LunarLander-v2", num_generations
     pop.add_reporter(neat.StdOutReporter(True))
     pop.add_reporter(neat.Checkpointer(generation_interval=100000, time_interval_seconds=1800))
 
-    ec = ParallelRewardEvaluator(NUM_CORES, env_name)
+    ec = ParallelRewardEvaluator(NUM_CORES, env_name, env_args)
 
     # Run until the winner from a generation is able to solve the environment
     gen_best = pop.run(ec.eval_genomes, num_generations)
@@ -79,4 +79,4 @@ def run(config_file="config-default", env_name="LunarLander-v2", num_generations
 if __name__ == '__main__':
     # https://github.com/ShangtongZhang/DistributedES/blob/master/neat-config/BipedalWalker-v2.txt
     # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
-    run(config_file="config-lander", env_name='LunarLander-v2', num_generations=1e2)
+    run(config_file="config-lander", env_name='LunarLander-v2', env_args={"continuous": False}, num_generations=1e8)

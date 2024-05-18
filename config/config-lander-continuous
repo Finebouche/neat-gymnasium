@@ -1,4 +1,4 @@
-# neat-python configuration for the Walfer environment on Gymnasium
+# neat-python configuration for the LunarLander-v2 continuous environment on Gymnasium
 
 [NEAT]
 pop_size              = 150
@@ -9,26 +9,25 @@ fitness_threshold     = 150.0
 reset_on_extinction   = 0
 
 [DefaultGenome]
-num_inputs              = 24
+num_inputs              = 8
 num_hidden              = 0
-num_outputs             = 4
-
-initial_connection      = partial_direct 0.5
+num_outputs             = 2
+initial_connection      = partial_nodirect 0.5
 feed_forward            = True
-compatibility_disjoint_coefficient = 1.0
-compatibility_weight_coefficient   = 0.6
+
+compatibility_disjoint_coefficient    = 1.0
+compatibility_weight_coefficient      = 0.6
 
 conn_add_prob           = 0.2
-conn_delete_prob        = 0.1
+conn_delete_prob        = 0.2
 
 node_add_prob           = 0.2
-node_delete_prob        = 0.1
-
+node_delete_prob        = 0.2
 single_structural_mutation = False
 structural_mutation_surer = True
 
-activation_default      = clamped
-activation_options      = clamped
+activation_default      = tanh
+activation_options      = tanh
 # sigmoid tanh sin gauss relu softplus identity clamped abs hat
 activation_mutate_rate  = 0.0
 
@@ -67,9 +66,9 @@ compatibility_threshold = 3.0
 
 [DefaultStagnation]
 species_fitness_func = max
-max_stagnation  = 20
+max_stagnation  = 30
 species_elitism = 2
 
 [DefaultReproduction]
-elitism            = 3
+elitism            = 4
 survival_threshold = 0.2
