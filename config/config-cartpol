@@ -1,7 +1,7 @@
 # neat-python configuration for the LunarLander-v2 environment on OpenAI Gym
 
 [NEAT]
-pop_size              = 200
+pop_size              = 150
 # Note: the fitness threshold will never be reached because
 # we are controlling the termination ourselves based on simulation performance.
 fitness_criterion     = max
@@ -13,22 +13,22 @@ num_inputs              = 4
 num_hidden              = 1
 num_outputs             = 2
 
-initial_connection      =  full_direct
+initial_connection      = partial_direct 0.5
 feed_forward            = True
-compatibility_disjoint_coefficient = 1.0
-compatibility_weight_coefficient   = 1.0
+compatibility_disjoint_coefficient    = 1.0
+compatibility_weight_coefficient      = 0.6
 
-conn_add_prob           = 0.1
-conn_delete_prob        = 0.0
+conn_add_prob           = 0.02
+conn_delete_prob        = 0.01
 
-node_add_prob           = 0.25
-node_delete_prob        = 0.2
+node_add_prob           = 0.01
+node_delete_prob        = 0.005
 
 single_structural_mutation = False
 structural_mutation_surer = True
 
-activation_default      = clamped
-activation_options      = clamped
+activation_default      = tanh
+activation_options      = tanh
 # sigmoid tanh sin gauss relu softplus identity clamped abs hat
 activation_mutate_rate  = 0.0
 
@@ -56,7 +56,7 @@ weight_max_value        = 30
 weight_min_value        = -30
 weight_init_mean        = 0.0
 weight_init_stdev       = 1.0
-weight_mutate_rate      = 0.8
+weight_mutate_rate      = 0.9
 weight_replace_rate     = 0.1
 weight_mutate_power     = 0.5
 enabled_default         = True
@@ -66,9 +66,8 @@ enabled_mutate_rate     = 0.01
 compatibility_threshold = 3.0
 
 [DefaultStagnation]
-species_fitness_func = mean
-max_stagnation  = 20
-species_elitism = 2
+species_fitness_func = max
+max_stagnation  = 40
 
 [DefaultReproduction]
 elitism            = 3

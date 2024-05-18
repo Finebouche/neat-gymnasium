@@ -16,13 +16,13 @@ num_outputs             = 4
 initial_connection      =  full_direct
 feed_forward            = True
 compatibility_disjoint_coefficient = 1.0
-compatibility_weight_coefficient   = 1.0
+compatibility_weight_coefficient   = 0.6
 
-conn_add_prob           = 0.25
+conn_add_prob           = 0.2
 conn_delete_prob        = 0.1
 
-node_add_prob           = 0.25
-node_delete_prob        = 0.2
+node_add_prob           = 0.2
+node_delete_prob        = 0.1
 
 single_structural_mutation = False
 structural_mutation_surer = True

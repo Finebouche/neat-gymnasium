@@ -1,7 +1,7 @@
 # neat-python configuration for the LunarLander-v2 environment on OpenAI Gym
 
 [NEAT]
-pop_size              = 200
+pop_size              = 150
 # Note: the fitness threshold will never be reached because
 # we are controlling the termination ourselves based on simulation performance.
 fitness_criterion     = max
@@ -10,25 +10,24 @@ reset_on_extinction   = 0
 
 [DefaultGenome]
 num_inputs              = 8
-num_hidden              = 1
+num_hidden              = 3
 num_outputs             = 4
 
-initial_connection      =  full_direct
+initial_connection      = full_direct
 feed_forward            = True
-compatibility_disjoint_coefficient = 1.0
-compatibility_weight_coefficient   = 1.0
+compatibility_disjoint_coefficient    = 1.0
+compatibility_weight_coefficient      = 0.6
 
-conn_add_prob           = 0.1
-conn_delete_prob        = 0.0
+conn_add_prob           = 0.2
+conn_delete_prob        = 0.1
 
-node_add_prob           = 0.25
-node_delete_prob        = 0.2
-
+node_add_prob           = 0.2
+node_delete_prob        = 0.1
 single_structural_mutation = False
 structural_mutation_surer = True
 
-activation_default      = clamped
-activation_options      = clamped
+activation_default      = tanh
+activation_options      = tanh
 # sigmoid tanh sin gauss relu softplus identity clamped abs hat
 activation_mutate_rate  = 0.0
 
@@ -67,9 +66,9 @@ compatibility_threshold = 3.0
 
 [DefaultStagnation]
 species_fitness_func = max
-max_stagnation  = 20
+max_stagnation  = 30
 species_elitism = 2
 
 [DefaultReproduction]
-elitism            = 3
-survival_threshold = 0.2
+elitism            = 4
+survival_threshold = 0.1
