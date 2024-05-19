@@ -137,6 +137,14 @@ def draw_net(config, genome, view=False, filename=None, node_names=None, show_di
 
 def visualize(config_file, env_name, env_args):
     local_dir = os.path.dirname(__file__)
+    env_args_str = [key for key, value in env_args.items() if value]
+    # remove the key "render_mode" from the list and return and empty list if it is the only key
+    if env_args_str == ["render_mode"]:
+        env_args_str = []
+
+    print(env_args_str)
+    result_path = os.path.join(local_dir, "visualisations", env_name, *env_args_str)
+
     config_path = os.path.join(local_dir, "config", config_file)
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
@@ -145,7 +153,7 @@ def visualize(config_file, env_name, env_args):
 
 
     # charge pickle file with the best genome
-    with open('winner-net.pickle', 'rb') as f:
+    with open(result_path + '/best_genome.pickle', 'rb') as f:
         winner = pickle.load(f)
     reward = compute_reward(winner, config, env_name, env_args, 1)
     print(reward)

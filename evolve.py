@@ -62,16 +62,17 @@ def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=N
 
     ec = ParallelRewardEvaluator(NUM_CORES, env_name, env_args, num_tests)
 
-    # get strings name of env_args which value are True
-    env_args_str = [key for key, value in env_args.items() if value]
 
     # Run until the winner from a generation is able to solve the environment
     gen_best = pop.run(ec.eval_genomes, num_generations)
 
+    # get strings name of env_args which value are True
+    env_args_str = [key for key, value in env_args.items() if value]
     result_path = os.path.join(local_dir, "visualisations", env_name, *env_args_str)
     # Save the best model
-    name = '/best_genome'
-    with open(result_path + name + '.pickle', 'wb') as f:
+    # create the directory if it does not exist
+    os.makedirs(result_path, exist_ok=True)
+    with open(result_path + '/best_genome.pickle', 'wb') as f:
         pickle.dump(gen_best, f)
 
     # Display the winning genome.
@@ -83,9 +84,10 @@ def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=N
 if __name__ == '__main__':
     # https://github.com/ShangtongZhang/DistributedES/blob/master/neat-config/BipedalWalker-v2.txt
     # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
-    run(config_file="config-walker",
+    run(config_file="config-walker-hardcore",
         env_name='BipedalWalker-v3',
-        env_args={},  # "continuous": False, "hardcore": True
+        env_args={"hardcore": True},  # "continuous": False, "hardcore": True
         num_generations=1e3,
-        num_tests=1,
+        checkpoint=None,
+        num_tests=2,
         )

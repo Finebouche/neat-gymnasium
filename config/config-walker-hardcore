@@ -5,7 +5,7 @@ pop_size              = 150
 # Note: the fitness threshold will never be reached because
 # we are controlling the termination ourselves based on simulation performance.
 fitness_criterion     = max
-fitness_threshold     = 265.0
+fitness_threshold     = 250
 reset_on_extinction   = 0
 
 [DefaultGenome]
@@ -16,19 +16,19 @@ num_outputs             = 4
 initial_connection      = partial_direct 0.5
 feed_forward            = True
 compatibility_disjoint_coefficient = 1.0
-compatibility_weight_coefficient   = 1.0
+compatibility_weight_coefficient   = 0.8
 
-conn_add_prob           = 0.2
-conn_delete_prob        = 0.2
+conn_add_prob           = 0.3
+conn_delete_prob        = 0.3
 
-node_add_prob           = 0.2
-node_delete_prob        = 0.2
+node_add_prob           = 0.3
+node_delete_prob        = 0.3
 
 single_structural_mutation = False
 structural_mutation_surer = True
 
-activation_default      = clamped
-activation_options      = clamped
+activation_default      = tanh
+activation_options      = tanh
 # sigmoid tanh sin gauss relu softplus identity clamped abs hat
 activation_mutate_rate  = 0.0
 
@@ -60,16 +60,16 @@ weight_mutate_rate      = 0.8
 weight_replace_rate     = 0.1
 weight_mutate_power     = 0.5
 enabled_default         = True
-enabled_mutate_rate     = 0.01
+enabled_mutate_rate     = 0
 
 [DefaultSpeciesSet]
 compatibility_threshold = 3.0
 
 [DefaultStagnation]
-species_fitness_func = mean
-max_stagnation  = 30
+species_fitness_func = max
+max_stagnation  = 20
 species_elitism = 2
 
 [DefaultReproduction]
-elitism            = 3
+elitism            = 2
 survival_threshold = 0.2
