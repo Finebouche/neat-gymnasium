@@ -5,14 +5,14 @@ pop_size              = 150
 # Note: the fitness threshold will never be reached because
 # we are controlling the termination ourselves based on simulation performance.
 fitness_criterion     = max
-fitness_threshold     = 150.0
+fitness_threshold     = 195.0
 reset_on_extinction   = 0
 
 [DefaultGenome]
 num_inputs              = 8
 num_hidden              = 0
 num_outputs             = 2
-initial_connection      = partial_nodirect 0.5
+initial_connection      = partial_direct 0.5
 feed_forward            = True
 
 compatibility_disjoint_coefficient    = 1.0
@@ -59,16 +59,16 @@ weight_mutate_rate      = 0.8
 weight_replace_rate     = 0.1
 weight_mutate_power     = 0.5
 enabled_default         = True
-enabled_mutate_rate     = 0.01
+enabled_mutate_rate     = 0.0
 
 [DefaultSpeciesSet]
 compatibility_threshold = 3.0
 
 [DefaultStagnation]
-species_fitness_func = max
+species_fitness_func = mean
 max_stagnation  = 30
 species_elitism = 2
 
 [DefaultReproduction]
-elitism            = 4
+elitism            = 2
 survival_threshold = 0.2

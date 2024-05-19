@@ -2,12 +2,11 @@ name: neat_env
 channels:
   - conda-forge
 dependencies:
-  - python=3.9
+  - python=3.11
   - cairo
   - cython
   - graphviz
   - jupyter
-  - "gymnasium[box2d]"
   - matplotlib
   - pyglet
   - python-graphviz
@@ -18,4 +17,5 @@ dependencies:
       - moviepy
       - pygame
       - pyspice
-      - neat-python
+      - -e ../../other/neat-python
+      - gymnasium[box2d]

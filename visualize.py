@@ -3,8 +3,7 @@ import warnings
 import graphviz
 import matplotlib.pyplot as plt
 import numpy as np
-import gymnasium
-from compute_action_util import compute_action_discrete, compute_action_box, compute_reward
+from compute_action_util import compute_reward
 import pickle
 import neat
 import os
@@ -136,40 +135,25 @@ def draw_net(config, genome, view=False, filename=None, node_names=None, show_di
     return dot
 
 
-# Function to evaluate the performance of the neural network
-def evaluate_network(config, genome, env, render=False):
-    network = neat.nn.FeedForwardNetwork.create(genome, config)
-    observation, info = env.reset()
-    terminated = False
-    while not terminated:
-        if render:
-            env.render()
-        action = compute_action_discrete(network, observation)
-        observation, reward, terminated, done, info = env.step(action)
-
-    env.close()
-
-
-def visualize(config_file="config-default", env_name="LunarLander-v2", render_mode="human"):
+def visualize(config_file, env_name, env_args):
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, "config", config_file)
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
 
-    # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
-    env = gymnasium.make(env_name, render_mode=render_mode)
-    if isinstance(env.action_space, gymnasium.spaces.Discrete):
-        compute_action = compute_action_discrete
-    else:
-        compute_action = compute_action_box
+
 
     # charge pickle file with the best genome
     with open('winner-net.pickle', 'rb') as f:
         winner = pickle.load(f)
-    compute_reward(winner, config, env, num_episodes=1, compute_action=compute_action)
+    reward = compute_reward(winner, config, env_name, env_args, 1)
+    print(reward)
 
 
 # if main
 if __name__ == '__main__':
-    visualize(config_file="config-lander", env_name="LunarLander-v2", render_mode="human")
+    visualize(config_file="config-walker",
+              env_name="BipedalWalker-v3", # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
+              env_args={ "render_mode": "human"}  # "continuous": False, "hardcore": True
+              )

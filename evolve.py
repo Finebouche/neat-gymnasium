@@ -1,49 +1,49 @@
-from multiprocessing import Pool, cpu_count, TimeoutError
+from multiprocessing import Pool, cpu_count
 import os
 import pickle
-import time
-import gymnasium
 import neat
 import visualize
-from compute_action_util import compute_action_discrete, compute_action_box, compute_reward
+from compute_action_util import compute_reward
 
 NUM_CORES = cpu_count()
 
 
 class ParallelRewardEvaluator(object):
-    def __init__(self, num_workers, env_name, env_args):
+    def __init__(self, num_workers, env_name, env_args, num_tests):
         self.num_workers = num_workers
         self.generation = 0
+        self.env_name = env_name
+        self.env_args = env_args
+        self.num_tests = num_tests
         self.pool = Pool(processes=num_workers)
-        self.env = gymnasium.make(env_name, **env_args)
-        if isinstance(self.env.action_space, gymnasium.spaces.Discrete):
-            self.compute_action = compute_action_discrete
-        else:
-            self.compute_action = compute_action_box
 
     def eval_genomes(self, genomes, config):
         self.generation += 1
+        if NUM_CORES < 2:
+            for genome_id, genome in genomes:
+                genome.fitness = compute_reward(genome, config, self.env_name, self.env_args, self.num_tests)
+            return
+        else:
+            jobs = []
+            for _, genome in genomes:
+                jobs.append(self.pool.apply_async(
+                    compute_reward,
+                    [genome, config, self.env_name, self.env_args, self.num_tests]
+                ))
 
-        jobs = []
-        for _, genome in genomes:
-            jobs.append(self.pool.apply_async(
-                compute_reward,
-                [genome, config, self.env, self.compute_action]
-            ))
-
-        for job, (_, genome) in zip(jobs, genomes):
-            reward = job.get(timeout=None)
-            genome.fitness = reward
+            for job, (_, genome) in zip(jobs, genomes):
+                reward = job.get(timeout=None)
+                genome.fitness = reward
 
     # use function to close env when done
     def __delete__(self):
-        self.env.close()
         self.pool.close()
         self.pool.join()
         self.pool.terminate()
 
 
-def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=None):
+def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=None, num_tests=5):
+    print("Charging environment : ", env_name)
     # Load the config file, which is assumed to live in
     # the same directory as this script.
     local_dir = os.path.dirname(__file__)
@@ -60,23 +60,32 @@ def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=N
     pop.add_reporter(neat.StdOutReporter(True))
     pop.add_reporter(neat.Checkpointer(generation_interval=100000, time_interval_seconds=1800))
 
-    ec = ParallelRewardEvaluator(NUM_CORES, env_name, env_args)
+    ec = ParallelRewardEvaluator(NUM_CORES, env_name, env_args, num_tests)
+
+    # get strings name of env_args which value are True
+    env_args_str = [key for key, value in env_args.items() if value]
 
     # Run until the winner from a generation is able to solve the environment
     gen_best = pop.run(ec.eval_genomes, num_generations)
 
-    # Display the winning genome.
-    visualization_path = os.path.join(local_dir, "visualisations", env_name)
-    visualize.draw_net(config, gen_best, True, filename=visualization_path + "/win-net.gv")
-    visualize.plot_stats(stats, ylog=False, view=True, filename=visualization_path + "/avg_fitness.svg")
-
-    # Save the best mosel
-    name = 'winner-net'
-    with open(name + '.pickle', 'wb') as f:
+    result_path = os.path.join(local_dir, "visualisations", env_name, *env_args_str)
+    # Save the best model
+    name = '/best_genome'
+    with open(result_path + name + '.pickle', 'wb') as f:
         pickle.dump(gen_best, f)
+
+    # Display the winning genome.
+    visualize.draw_net(config, gen_best, True, filename=result_path + "/win-net.gv")
+    visualize.plot_stats(stats, ylog=False, view=True, filename=result_path + "/avg_fitness.svg")
+
 
 
 if __name__ == '__main__':
     # https://github.com/ShangtongZhang/DistributedES/blob/master/neat-config/BipedalWalker-v2.txt
     # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
-    run(config_file="config-lander", env_name='LunarLander-v2', env_args={"continuous": False}, num_generations=1e8)
+    run(config_file="config-walker",
+        env_name='BipedalWalker-v3',
+        env_args={},  # "continuous": False, "hardcore": True
+        num_generations=1e3,
+        num_tests=1,
+        )
