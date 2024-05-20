@@ -5,8 +5,6 @@ import neat
 import visualize
 from compute_action_util import compute_reward
 
-NUM_CORES = cpu_count()
-
 
 class ParallelRewardEvaluator(object):
     def __init__(self, num_workers, env_name, env_args, num_tests):
@@ -15,11 +13,12 @@ class ParallelRewardEvaluator(object):
         self.env_name = env_name
         self.env_args = env_args
         self.num_tests = num_tests
+        self.num_workers = num_workers
         self.pool = Pool(processes=num_workers)
 
     def eval_genomes(self, genomes, config):
         self.generation += 1
-        if NUM_CORES < 2:
+        if self.num_workers < 2:
             for genome_id, genome in genomes:
                 genome.fitness = compute_reward(genome, config, self.env_name, self.env_args, self.num_tests)
             return
@@ -43,7 +42,7 @@ class ParallelRewardEvaluator(object):
         self.pool.terminate()
 
 
-def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=None, num_tests=5):
+def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=None, num_tests=5, num_cores=1):
     print("Charging environment : ", env_name)
     # Load the config file, which is assumed to live in
     # the same directory as this script.
@@ -61,7 +60,7 @@ def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=N
     pop.add_reporter(neat.StdOutReporter(True))
     pop.add_reporter(neat.Checkpointer(generation_interval=100000, time_interval_seconds=1800))
 
-    ec = ParallelRewardEvaluator(NUM_CORES, env_name, env_args, num_tests)
+    ec = ParallelRewardEvaluator(num_cores, env_name, env_args, num_tests)
 
     # Run until the winner from a generation is able to solve the environment
     gen_best = pop.run(ec.eval_genomes, num_generations)
@@ -87,6 +86,7 @@ if __name__ == '__main__':
         env_name='BipedalWalker-v3',
         env_args={"hardcore": True},  # "continuous": False, "hardcore": True
         num_generations=1e0,
-        checkpoint="neat-checkpoint-8400",
+        checkpoint=None,
         num_tests=2,
+        num_cores=cpu_count(),
         )
