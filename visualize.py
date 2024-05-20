@@ -141,8 +141,9 @@ def visualize(config_file, env_name, env_args):
     # remove the key "render_mode" from the list and return and empty list if it is the only key
     if env_args_str == ["render_mode"]:
         env_args_str = []
+    else:
+        env_args_str.remove("render_mode")
 
-    print(env_args_str)
     result_path = os.path.join(local_dir, "visualisations", env_name, *env_args_str)
 
     config_path = os.path.join(local_dir, "config", config_file)
@@ -161,7 +162,7 @@ def visualize(config_file, env_name, env_args):
 
 # if main
 if __name__ == '__main__':
-    visualize(config_file="config-walker",
+    visualize(config_file="config-walker-hardcore",
               env_name="BipedalWalker-v3", # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
-              env_args={ "render_mode": "human"}  # "continuous": False, "hardcore": True
+              env_args={"hardcore": True, "render_mode": "human"}  # "continuous": False, "hardcore": True
               )

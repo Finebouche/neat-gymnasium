@@ -38,6 +38,7 @@ class ParallelRewardEvaluator(object):
     # use function to close env when done
     def __delete__(self):
         self.pool.close()
+        self.pool.close()
         self.pool.join()
         self.pool.terminate()
 
@@ -62,7 +63,6 @@ def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=N
 
     ec = ParallelRewardEvaluator(NUM_CORES, env_name, env_args, num_tests)
 
-
     # Run until the winner from a generation is able to solve the environment
     gen_best = pop.run(ec.eval_genomes, num_generations)
 
@@ -76,9 +76,8 @@ def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=N
         pickle.dump(gen_best, f)
 
     # Display the winning genome.
-    visualize.draw_net(config, gen_best, True, filename=result_path + "/win-net.gv")
-    visualize.plot_stats(stats, ylog=False, view=True, filename=result_path + "/avg_fitness.svg")
-
+    visualize.draw_net(config, gen_best, view=False, filename=result_path + "/win-net.gv")
+    visualize.plot_stats(stats, ylog=False, view=False, filename=result_path + "/avg_fitness.svg")
 
 
 if __name__ == '__main__':
@@ -87,7 +86,7 @@ if __name__ == '__main__':
     run(config_file="config-walker-hardcore",
         env_name='BipedalWalker-v3',
         env_args={"hardcore": True},  # "continuous": False, "hardcore": True
-        num_generations=1e3,
-        checkpoint=None,
+        num_generations=1e0,
+        checkpoint="neat-checkpoint-8400",
         num_tests=2,
         )
