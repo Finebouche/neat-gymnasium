@@ -1,7 +1,7 @@
 # neat-python configuration for the Walker environment on Gymnasium
 
 [NEAT]
-pop_size              = 250
+pop_size              = 200
 # Note: the fitness threshold will never be reached because
 # we are controlling the termination ourselves based on simulation performance.
 fitness_criterion     = max
@@ -16,14 +16,14 @@ num_outputs             = 4
 initial_connection      = full_direct
 # full_direct partial_direct 0.5
 feed_forward            = True
-compatibility_disjoint_coefficient = 1.0
-compatibility_weight_coefficient   = 0.7
+compatibility_disjoint_coefficient = 0.7
+compatibility_weight_coefficient   = 1.0
 
-conn_add_prob           = 0.2
-conn_delete_prob        = 0.1
+conn_add_prob           = 0.1
+conn_delete_prob        = 0.0
 
-node_add_prob           = 0.2
-node_delete_prob        = 0.1
+node_add_prob           = 0.1
+node_delete_prob        = 0.05
 
 single_structural_mutation = False
 structural_mutation_surer = False
@@ -61,7 +61,7 @@ weight_mutate_rate      = 0.8
 weight_replace_rate     = 0.1
 weight_mutate_power     = 0.5
 enabled_default         = True
-enabled_mutate_rate     = 0.01
+enabled_mutate_rate     = 0.0
 
 [DefaultSpeciesSet]
 compatibility_threshold = 3.0
@@ -69,7 +69,7 @@ compatibility_threshold = 3.0
 [DefaultStagnation]
 species_fitness_func = max
 max_stagnation  = 20
-species_elitism = 2
+species_elitism = 3
 
 [DefaultReproduction]
 elitism            = 2

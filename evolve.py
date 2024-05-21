@@ -7,11 +7,12 @@ from compute_action_util import compute_reward
 
 
 class ParallelRewardEvaluator(object):
-    def __init__(self, num_workers, env_name, env_args, num_tests):
+    def __init__(self, num_workers, env_name, env_args, penalize_inactivity, num_tests):
         self.num_workers = num_workers
         self.generation = 0
         self.env_name = env_name
         self.env_args = env_args
+        self.penalize_inactivity = penalize_inactivity
         self.num_tests = num_tests
         self.num_workers = num_workers
         self.pool = Pool(processes=num_workers)
@@ -20,14 +21,14 @@ class ParallelRewardEvaluator(object):
         self.generation += 1
         if self.num_workers < 2:
             for genome_id, genome in genomes:
-                genome.fitness = compute_reward(genome, config, self.env_name, self.env_args, self.num_tests)
+                genome.fitness = compute_reward(genome, config, self.env_name, self.env_args, self.penalize_inactivity, self.num_tests)
             return
         else:
             jobs = []
             for _, genome in genomes:
                 jobs.append(self.pool.apply_async(
                     compute_reward,
-                    [genome, config, self.env_name, self.env_args, self.num_tests]
+                    [genome, config, self.env_name, self.env_args, self.penalize_inactivity, self.num_tests]
                 ))
 
             for job, (_, genome) in zip(jobs, genomes):
@@ -42,7 +43,7 @@ class ParallelRewardEvaluator(object):
         self.pool.terminate()
 
 
-def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=None, num_tests=5, num_cores=1):
+def run(config_file, env_name, env_args=None, penalize_inactivity=False, num_generations=None, checkpoint=None, num_tests=5, num_cores=1):
     print("Charging environment : ", env_name)
     # Load the config file, which is assumed to live in
     # the same directory as this script.
@@ -60,7 +61,7 @@ def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=N
     pop.add_reporter(neat.StdOutReporter(True))
     pop.add_reporter(neat.Checkpointer(generation_interval=1000, time_interval_seconds=1800))
 
-    ec = ParallelRewardEvaluator(num_cores, env_name, env_args, num_tests)
+    ec = ParallelRewardEvaluator(num_cores, env_name, env_args, penalize_inactivity, num_tests)
 
     # Run until the winner from a generation is able to solve the environment
     gen_best = pop.run(ec.eval_genomes, num_generations)
@@ -85,6 +86,7 @@ if __name__ == '__main__':
     run(config_file="config-walker-hardcore",
         env_name='BipedalWalker-v3',
         env_args={"hardcore": True},  # "continuous": False, "hardcore": True
+        penalize_inactivity=True,
         num_generations=1e4,
         checkpoint=None,
         num_tests=1,

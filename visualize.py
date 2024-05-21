@@ -162,7 +162,7 @@ def visualize(config_file, env_name, env_args, result_folder="visualisations"):
 if __name__ == '__main__':
     visualize(
         config_file="config-walker-hardcore",
-        env_name="BipedalWalker-v3", # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
+        env_name="BipedalWalker-v3",  # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
         env_args={"hardcore": True, "render_mode": "human"},  # "continuous": False, "hardcore": True
         result_folder="visualisations"
     )
