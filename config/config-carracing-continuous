@@ -1,4 +1,4 @@
-# neat-python configuration for the Walker environment on Gymnasium
+# neat-python configuration for the Carracing environment on Gymnasium
 
 [NEAT]
 pop_size              = 200
@@ -9,9 +9,9 @@ fitness_threshold     = 195
 reset_on_extinction   = 1
 
 [DefaultGenome]
-num_inputs              = 24
+num_inputs              = 27648
 num_hidden              = 10
-num_outputs             = 4
+num_outputs             = 3
 
 initial_connection      = full_direct
 # full_direct partial_direct 0.5

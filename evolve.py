@@ -82,9 +82,8 @@ def run(config_file, env_name, env_args=None, penalize_inactivity=False, num_gen
 
 if __name__ == '__main__':
     # https://github.com/ShangtongZhang/DistributedES/blob/master/neat-config/BipedalWalker-v2.txt
-    # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
     run(config_file="config-walker-hardcore",
-        env_name='BipedalWalker-v3',
+        env_name='BipedalWalker-v3',  # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
         env_args={"hardcore": True},  # "continuous": False, "hardcore": True
         penalize_inactivity=True,
         num_generations=1e4,
