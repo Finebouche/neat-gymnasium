@@ -10,19 +10,20 @@ reset_on_extinction   = 1
 
 [DefaultGenome]
 num_inputs              = 24
-num_hidden              = 1
+num_hidden              = 10
 num_outputs             = 4
 
-initial_connection      = partial_direct 0.5
+initial_connection      = full_direct
+# full_direct partial_direct 0.5
 feed_forward            = True
 compatibility_disjoint_coefficient = 1.0
-compatibility_weight_coefficient   = 0.6
+compatibility_weight_coefficient   = 0.7
 
 conn_add_prob           = 0.2
-conn_delete_prob        = 0.2
+conn_delete_prob        = 0.1
 
 node_add_prob           = 0.2
-node_delete_prob        = 0.2
+node_delete_prob        = 0.1
 
 single_structural_mutation = False
 structural_mutation_surer = False

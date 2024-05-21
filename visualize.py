@@ -135,7 +135,7 @@ def draw_net(config, genome, view=False, filename=None, node_names=None, show_di
     return dot
 
 
-def visualize(config_file, env_name, env_args):
+def visualize(config_file, env_name, env_args, result_folder="visualisations"):
     local_dir = os.path.dirname(__file__)
     env_args_str = [key for key, value in env_args.items() if value]
     # remove the key "render_mode" from the list and return and empty list if it is the only key
@@ -144,14 +144,12 @@ def visualize(config_file, env_name, env_args):
     else:
         env_args_str.remove("render_mode")
 
-    result_path = os.path.join(local_dir, "visualisations", env_name, *env_args_str)
+    result_path = os.path.join(local_dir, result_folder, env_name, *env_args_str)
 
     config_path = os.path.join(local_dir, "config", config_file)
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
-
-
 
     # charge pickle file with the best genome
     with open(result_path + '/best_genome.pickle', 'rb') as f:
@@ -162,7 +160,9 @@ def visualize(config_file, env_name, env_args):
 
 # if main
 if __name__ == '__main__':
-    visualize(config_file="config-walker-hardcore",
-              env_name="BipedalWalker-v3", # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
-              env_args={"hardcore": True, "render_mode": "human"}  # "continuous": False, "hardcore": True
-              )
+    visualize(
+        config_file="config-walker-hardcore",
+        env_name="BipedalWalker-v3", # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
+        env_args={"hardcore": True, "render_mode": "human"},  # "continuous": False, "hardcore": True
+        result_folder="visualisations"
+    )

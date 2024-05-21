@@ -58,7 +58,7 @@ def run(config_file, env_name, env_args=None, num_generations=None, checkpoint=N
     stats = neat.StatisticsReporter()
     pop.add_reporter(stats)
     pop.add_reporter(neat.StdOutReporter(True))
-    pop.add_reporter(neat.Checkpointer(generation_interval=100000, time_interval_seconds=1800))
+    pop.add_reporter(neat.Checkpointer(generation_interval=1000, time_interval_seconds=1800))
 
     ec = ParallelRewardEvaluator(num_cores, env_name, env_args, num_tests)
 
@@ -85,8 +85,8 @@ if __name__ == '__main__':
     run(config_file="config-walker-hardcore",
         env_name='BipedalWalker-v3',
         env_args={"hardcore": True},  # "continuous": False, "hardcore": True
-        num_generations=1e0,
+        num_generations=1e4,
         checkpoint=None,
-        num_tests=2,
+        num_tests=1,
         num_cores=cpu_count(),
-        )
+    )
