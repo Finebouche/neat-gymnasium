@@ -54,7 +54,7 @@ def run(config_file, env_name, env_args=None, penalize_inactivity=False, num_gen
                          config_path)
 
     # Load the population if checkpoint is not None
-    pop = neat.Checkpointer.restore_checkpoint(checkpoint) if checkpoint is not None else neat.Population(config)
+    pop = neat.Checkpointer.restore_checkpoint(checkpoint, config) if checkpoint is not None else neat.Population(config)
 
     stats = neat.StatisticsReporter()
     pop.add_reporter(stats)
@@ -63,6 +63,7 @@ def run(config_file, env_name, env_args=None, penalize_inactivity=False, num_gen
 
     ec = ParallelRewardEvaluator(num_cores, env_name, env_args, penalize_inactivity, num_tests)
 
+    print("Configuration ", pop.config.genome_config)
     # Run until the winner from a generation is able to solve the environment
     gen_best = pop.run(ec.eval_genomes, num_generations)
 
