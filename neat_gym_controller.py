@@ -34,7 +34,7 @@ def compute_reward(genome, config, env_name, env_args, penalize_inactivity, num_
             action, norm = compute_action(net, observation)
 
             # to avoid local minima were the agent does not move
-            if norm < 0.5 and penalize_inactivity:
+            if norm < 0.6 and penalize_inactivity:
                 total_reward -= 1
             observation, reward, terminated, done, info = env.step(action)
 

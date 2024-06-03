@@ -3,7 +3,7 @@ import warnings
 import graphviz
 import matplotlib.pyplot as plt
 import numpy as np
-from compute_action_util import compute_reward
+from neat_gym_controller import compute_reward
 import pickle
 import neat
 import os

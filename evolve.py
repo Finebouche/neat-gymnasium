@@ -3,7 +3,7 @@ import os
 import pickle
 import neat
 import visualize
-from compute_action_util import compute_reward
+from neat_gym_controller import compute_reward
 
 
 class ParallelRewardEvaluator(object):
