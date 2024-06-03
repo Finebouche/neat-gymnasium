@@ -1,3 +1,5 @@
+![Illustration of Neat Gymnasium](illustration.jpeg)
+
 # Neat Gymnasium
 
 Neat Gymnasium is a project that utilizes NEAT (NeuroEvolution of Augmenting Topologies) to train agents in various OpenAI Gym environments. The project leverages parallel processing to efficiently evaluate rewards across multiple cores, enhancing performance and scalability.
