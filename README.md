@@ -31,7 +31,11 @@ Neat Gymnasium is a project that utilizes NEAT (NeuroEvolution of Augmenting Top
     ```bash
     conda env create -f environment.yml  
     ```
-
+3. Activate the environment:
+    ```bash
+    conda activate neat_env
+    ```
+   
 ## Usage
 
 ### Running the Training
