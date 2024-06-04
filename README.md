@@ -29,7 +29,7 @@ Neat Gymnasium is a project that utilizes NEAT (NeuroEvolution of Augmenting Top
 
 2. Install the required packages:
     ```bash
-    pip install -r requirements.txt
+    conda env create -f environment.yml  
     ```
 
 ## Usage
