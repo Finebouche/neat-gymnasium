@@ -23,7 +23,7 @@ Neat Gymnasium is a project that utilizes NEAT (NeuroEvolution of Augmenting Top
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/neat-gymnasium.git
+    git clone https://github.com/Finebouche/neat-gymnasium.git
     cd neat-gymnasium
     ```
 
