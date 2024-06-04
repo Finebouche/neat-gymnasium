@@ -17,5 +17,5 @@ dependencies:
       - moviepy
       - pygame
       - pyspice
-      - -e ../../other/neat-python
+      - git+https://github.com/Finebouche/neat-python.git # -e ../../other/neat-python
       - gymnasium[box2d]
