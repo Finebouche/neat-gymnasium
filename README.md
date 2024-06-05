@@ -13,11 +13,9 @@ Neat Gymnasium is a project that utilizes NEAT (NeuroEvolution of Augmenting Top
 
 ## Requirements
 
-- Python 3.7+
+- Python 3.11
 - NEAT-Python
 - OpenAI Gym
-- Matplotlib (for visualization)
-- Pickle
 
 ## Installation
 
