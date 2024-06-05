@@ -6,7 +6,6 @@ dependencies:
   - cairo
   - cython
   - graphviz
-  - jupyter
   - matplotlib
   - pyglet
   - python-graphviz
