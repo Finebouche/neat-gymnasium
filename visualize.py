@@ -152,10 +152,11 @@ def visualize(config_file, env_name, env_args, result_folder="visualisations"):
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
 
-    # charge pickle file with the best genome
+    env = gymnasium.make(env_name, **env_args)
+
+    # load the best genome
     with open(result_path + '/best_genome.pickle', 'rb') as f:
         winner = pickle.load(f)
-    env = gymnasium.make(env_name, **env_args)
     reward = run_environment(winner, config, env, 1)
     print(reward)
 
@@ -163,8 +164,8 @@ def visualize(config_file, env_name, env_args, result_folder="visualisations"):
 # if main
 if __name__ == '__main__':
     visualize(
-        config_file="config-walker-hardcore",
-        env_name="BipedalWalker-v3",  # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
-        env_args={"hardcore": True, "render_mode": "human"},  # "continuous": False, "hardcore": True
+        config_file="config-ant",
+        env_name="Ant-v5",  # LunarLander-v2 CarRacing-v1, BipedalWalker-v3, CartPole-v1
+        env_args={"render_mode": "human"},  # "continuous": False, "hardcore": True
         result_folder="visualisations"
     )

@@ -5,6 +5,7 @@ import neat
 import visualize
 from neat_gym_controller import run_environment
 import gymnasium
+from wandb_reporter import WandbReporter
 
 
 class ParallelRewardEvaluator(object):
@@ -64,18 +65,13 @@ def run(config_file: str, env_name: str, env_args=None, penalize_inactivity=Fals
     with open("wandb_api_key.txt", "r") as f:
         wandb_key = f.read().strip()
     save_interval = int(num_generations / 10)
-    wandb_reporter = neat.WandbReporter(
-        wandb_key,
-        "heterogenity-neat",
-        env,
-        tags=["neat", env_name]
-    )
+    wandb_reporter = WandbReporter(wandb_key, "heterogeneity-neat", env, save_interval, tags=["neat", env_name])
     pop.add_reporter(wandb_reporter)
     pop.add_reporter(neat.StatisticsReporter())
     pop.add_reporter(neat.StdOutReporter(True))
     pop.add_reporter(neat.Checkpointer(generation_interval=save_interval,
                                        time_interval_seconds=1800,
-                                       filename_prefix=env_name)
+                                       filename_prefix="checkpoint-" + env_name + "-")
                      )
 
     ec = ParallelRewardEvaluator(num_cores, env, penalize_inactivity, num_tests)
@@ -96,18 +92,18 @@ def run(config_file: str, env_name: str, env_args=None, penalize_inactivity=Fals
     # Display the winning genome.
     visualize.draw_net(config, gen_best, view=False, filename=result_path + "/win-net.gv")
     # not necessary with wandb
-    #visualize.plot_stats(stats, ylog=False, view=False, filename=result_path + "/avg_fitness.svg")
+    # visualize.plot_stats(stats, ylog=False, view=False, filename=result_path + "/avg_fitness.svg")
     env.close()
 
 
 if __name__ == '__main__':
     # https://github.com/ShangtongZhang/DistributedES/blob/master/neat-config/BipedalWalker-v2.txt
     run(config_file="config-ant",
-        env_name='Ant-v4',  # LunarLander-v2 CarRacing-v2, BipedalWalker-v3, CartPole-v1, Ant-v4
-        env_args={},  # "continuous": False, "hardcore": True
+        env_name='Ant-v5',  # LunarLander-v2 CarRacing-v2, BipedalWalker-v3, CartPole-v1, Ant-v4
+        env_args={"render_mode": "rgb_array"},  # "continuous": False, "hardcore": True
         penalize_inactivity=False,
-        num_generations=1e5,
-        #checkpoint="neat-checkpoint-4350",
+        num_generations=1e2,
+        # checkpoint="neat-checkpoint-4350",
         num_tests=2,
         num_cores=cpu_count(),
         )

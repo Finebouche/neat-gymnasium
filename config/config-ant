@@ -9,7 +9,7 @@ fitness_threshold     = 195
 reset_on_extinction   = 1
 
 [DefaultGenome]
-num_inputs              = 27
+num_inputs              = 105
 num_hidden              = 10
 num_outputs             = 8
 

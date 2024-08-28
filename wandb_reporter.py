@@ -3,7 +3,7 @@ import wandb
 from neat.reporting import BaseReporter
 import numpy as np
 import gymnasium
-
+import neat
 
 class WandbReporter(BaseReporter):
     def __init__(self, api_key, project_name, env, generation_interval, tags=None):
@@ -25,18 +25,25 @@ class WandbReporter(BaseReporter):
 
     def post_evaluate(self, config, population, species, best_genome):
         wandb.log({"best_genome": best_genome.fitness})
-
+        net = neat.nn.FeedForwardNetwork.create(best_genome, config)
         # save the video every generation_interval
         if self.generation_interval is not None and self.current_generation % self.generation_interval == 0:
             observation, observation_init_info = self.env.reset()
-            for _ in range(300):
+            frames = []
+            while True:
                 if isinstance(self.env.action_space, gymnasium.spaces.Discrete):
-                    action = np.argmax(best_genome.activate(observation))
+                    action = np.argmax(net.activate(observation))
                 else:
-                    action = best_genome.activate(observation)
-                observation, _, _, _, _ = self.env.step(action)
+                    action = net.activate(observation)
+                observation, _,  terminated, done, _ = self.env.step(action)
+                frame = self.env.render()
+                frames.append(frame.transpose(2, 0, 1))  # Collect frame
+                print(frame.T.shape)
+                if terminated or done:
+                    break
 
-            numpy_array_video = self.env.render()
+            numpy_array_video = np.array(frames)
+            print("numpy_array_video", numpy_array_video.shape)
             wandb.log({"video": wandb.Video(numpy_array_video, fps=4, format="gif")})
 
     def post_reproduction(self, config, population, species):

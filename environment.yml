@@ -17,6 +17,6 @@ dependencies:
       - pygame
       - pyspice
       - git+https://github.com/Finebouche/neat-python.git # -e ../../other/neat-python
-      - "gymnasium[all]"
+      - "gymnasium[all]"==1.0.0a2
       - mujoco
       - wandb

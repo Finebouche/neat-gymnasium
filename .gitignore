@@ -1,4 +1,4 @@
-/neat-checkpoint-*
+checkpoint-*
 *.svg
 .idea
 *.pickle
@@ -6,3 +6,4 @@
 *.ipynb_checkpoints/
 __pycache__/
 wandb_api_key.txt
+/wandb/
