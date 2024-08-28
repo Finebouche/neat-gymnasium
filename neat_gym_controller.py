@@ -17,10 +17,9 @@ def compute_action_box(net, observation):
     return action, norm
 
 
-def compute_reward(genome, config, env_name, env_args, penalize_inactivity, num_episodes=3):
+def run_environment(genome, config, env, penalize_inactivity, num_episodes=3):
     net = neat.nn.FeedForwardNetwork.create(genome, config)
 
-    env = gymnasium.make(env_name, **env_args)
     if isinstance(env.action_space, gymnasium.spaces.Discrete):
         compute_action = compute_action_discrete
     else:
@@ -32,9 +31,8 @@ def compute_reward(genome, config, env_name, env_args, penalize_inactivity, num_
 
         while True:
             action, norm = compute_action(net, observation)
-
             # to avoid local minima were the agent does not move
-            if norm < 0.6 and penalize_inactivity:
+            if (observation[2] < 0.01 or norm < 1.8) and penalize_inactivity:
                 total_reward -= 1
             observation, reward, terminated, done, info = env.step(action)
 

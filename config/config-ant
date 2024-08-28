@@ -9,9 +9,9 @@ fitness_threshold     = 195
 reset_on_extinction   = 1
 
 [DefaultGenome]
-num_inputs              = 24
+num_inputs              = 27
 num_hidden              = 10
-num_outputs             = 4
+num_outputs             = 8
 
 initial_connection      = partial_direct 0.25
 # full_direct partial_direct 0.5

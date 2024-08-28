@@ -3,10 +3,11 @@ import warnings
 import graphviz
 import matplotlib.pyplot as plt
 import numpy as np
-from neat_gym_controller import compute_reward
+from neat_gym_controller import run_environment
 import pickle
 import neat
 import os
+import gymnasium
 
 
 def plot_stats(statistics, ylog=False, view=False, filename='avg_fitness.svg'):
@@ -154,7 +155,8 @@ def visualize(config_file, env_name, env_args, result_folder="visualisations"):
     # charge pickle file with the best genome
     with open(result_path + '/best_genome.pickle', 'rb') as f:
         winner = pickle.load(f)
-    reward = compute_reward(winner, config, env_name, env_args, 1)
+    env = gymnasium.make(env_name, **env_args)
+    reward = run_environment(winner, config, env, 1)
     print(reward)
 
 
