@@ -38,12 +38,10 @@ class WandbReporter(BaseReporter):
                 observation, _,  terminated, done, _ = self.env.step(action)
                 frame = self.env.render()
                 frames.append(frame.transpose(2, 0, 1))  # Collect frame
-                print(frame.T.shape)
                 if terminated or done:
                     break
 
             numpy_array_video = np.array(frames)
-            print("numpy_array_video", numpy_array_video.shape)
             wandb.log({"video": wandb.Video(numpy_array_video, fps=4, format="gif")})
 
     def post_reproduction(self, config, population, species):
