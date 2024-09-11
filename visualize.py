@@ -157,6 +157,10 @@ def visualize(config_file, env_name, env_args, result_folder="visualisations"):
     # load the best genome
     with open(result_path + '/best_genome.pickle', 'rb') as f:
         winner = pickle.load(f)
+
+    # Display the winning genome.
+    visualize.draw_net(config, winner, view=False, filename=result_path + "/win-net.gv")
+
     reward = run_environment(winner, config, env, 1)
     print(reward)
 
